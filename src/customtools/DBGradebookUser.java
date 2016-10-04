@@ -1,12 +1,14 @@
 package customtools;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import customTools.DbUtil;
-import model.Gradebook;
+
 import model.Gradebookuser;
 
 public class DBGradebookUser {
@@ -42,10 +44,20 @@ public class DBGradebookUser {
 	 public static Gradebookuser getUserByname(String name)
 	 {
 	 EntityManager em = DbUtil.getEmFactory().createEntityManager();
-	 String qString = "Select u from Gradebookuser u "
-	 + "where u.username = :username";
-	 TypedQuery<Gradebookuser> q = em.createQuery(qString, Gradebookuser.class);
-	 q.setParameter("username", name);
+	 String qString="";
+	 TypedQuery<Gradebookuser> q;
+	 
+	
+	 if(name.equals("%")){
+		 qString= "Select u from Gradebookuser u ";
+		 q = em.createQuery(qString, Gradebookuser.class);
+	 }else {
+		  qString = "Select u from Gradebookuser u "
+				 + "where u.username = :username";
+				  q = em.createQuery(qString, Gradebookuser.class);
+				 q.setParameter("username", name);	 
+	 }
+	
 	 Gradebookuser user = null;
 	 try {
 	 user = q.getSingleResult();
@@ -76,6 +88,26 @@ public class DBGradebookUser {
 	 		 em.close();
 	 		 }
 	 		 
+		}
+	 		 public static List<Gradebookuser> getalluser(Gradebookuser user) {
 
+	 			
+	 			     EntityManager em = DbUtil.getEmFactory().createEntityManager();
+	 			     String qString = "select b from Gradebookuser b";
+	 			     
+	 			     List<Gradebookuser> users = null;
+	 			     try{
+	 			         TypedQuery<Gradebookuser> query = em.createQuery(qString,Gradebookuser.class);
+	 			         users = query.getResultList();
+
+	 			     }catch (Exception e){
+	 			         e.printStackTrace();
+	 			     }
+	 			     finally{
+	 			             em.close();
+	 			         }
+	 			     return users;
+	 			 }
+	 		 
 }
-}
+

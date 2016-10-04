@@ -41,15 +41,26 @@ public class GradebookuserServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String nextURL="";
 		HttpSession session = request.getSession();
 		response.setContentType("text/html");
 		
+		String name="";
+		String password="";
+		String action=request.getParameter("action");
 		
-		String name =request.getParameter("username");
-		String password =request.getParameter("password");
+		if(action.equalsIgnoreCase("Logout")){
+			nextURL="/GradeBookLogin.jsp";
+			session.invalidate();
+		}
+		else {
+		
+		 name =request.getParameter("username");
+		 password =request.getParameter("password");
+		}
 		
 		
 		if (DBGradebookUser.isValidUser(name, password)) {
@@ -57,26 +68,42 @@ public class GradebookuserServlet extends HttpServlet {
 			Gradebookuser gb = DBGradebookUser.getUserByname(name);
 			session.setAttribute("user", gb);
 			
+			String role=gb.getUserrole();
 			
-			long userid=gb.getUserid();
-			System.out.println("user id is :" + userid);
+			if(role.equalsIgnoreCase("student")) {
+				long userid=gb.getUserid();
+				System.out.println("user id is :" + userid);
+				List<Gradebook> grades= null;
+				grades=DBGradebook.gradesofuser(userid);
+				session.setAttribute("grades", grades);
+				nextURL="/Gradespage.jsp";
+
+				
+				
+		}else if (role.equalsIgnoreCase("teacher")){
 			
 			
-			List<Gradebook> grades= null;
-			grades=DBGradebook.gradesofuser(userid);
-			session.setAttribute("grades", grades);
 			
-			nextURL="/Gradespage.jsp";
+			List <Gradebook> allgrades=null;
 			
+			
+			allgrades= DBGradebook.Gradebook();
+			
+			
+			session.setAttribute("allgrades", allgrades);
+			nextURL="/TeachersView.jsp";
 			
 		}
-		else{
+
+			
+	else{
 			System.out.println("User not found");
 			nextURL = "/GradeBookLogin.jsp";
 		}
 		
-	  	response.sendRedirect(request.getContextPath() + nextURL);
+	  
 	
 	}
-
+		response.sendRedirect(request.getContextPath() + nextURL);
+	}
 }

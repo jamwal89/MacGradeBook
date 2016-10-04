@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import customTools.DbUtil;
 import model.Gradebook;
+import model.Gradebookuser;
 
 public class DBGradebook {
 	  
@@ -67,7 +69,9 @@ public class DBGradebook {
 
  public static List<Gradebook> Gradebook (){
      EntityManager em = DbUtil.getEmFactory().createEntityManager();
-     String qString = "select b from Gradebook b";
+     
+     					
+     String qString = "select  gb from Gradebook gb";
      
      List<Gradebook> posts = null;
      try{
@@ -139,6 +143,26 @@ public class DBGradebook {
      }return searchposts;
  }
  
-	
+ public static  Gradebook getuserRecord(int recordid)
+ {
+	 EntityManager em = DbUtil.getEmFactory().createEntityManager();
+
+	 String qString = "Select u from Gradebook u "
+			 + "where u.gbid = :recordid";
+	 TypedQuery<Gradebook>  q = em.createQuery(qString, Gradebook.class);
+	 q.setParameter("recordid", recordid);	 
+
+
+	 Gradebook record = null;
+	 try {
+		 record = q.getSingleResult();
+	 }catch (NoResultException e){
+		 System.out.println(e);
+	 }finally{
+		 em.close();
+	 }
+	 return record;
+
+ }
 
 }

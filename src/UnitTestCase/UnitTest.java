@@ -25,10 +25,10 @@ public class UnitTest {
 		Gradebook gb = new Gradebook();
 		gb.setAssignment("Java");
 		gb.setUserid(4);
-		gb.s
 		
-		System.out.println("GradeBook Insert");
-		DBGradebookUser.insert(gb);
+		
+		//System.out.println("GradeBook Insert");
+		//DBGradebookUser.insert(gb);
 		
 	}
 

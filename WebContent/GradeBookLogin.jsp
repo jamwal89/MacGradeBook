@@ -28,6 +28,7 @@ Password:<br>
 <input type="password" name="password"> <br>
 <input type = "Submit" value ="Log In">
 <input type="reset" value="Reset"> <br>
+<input type="hidden" name="action" value="Log in">
 </form>
 </body>
 </html>

@@ -24,6 +24,11 @@
     </c:forEach>
     </tbody>
     </table>
+   
+</form>
+<form action ="GradebookuserServlet" method="post">
+ <input type="submit" value="Logout">
+	<input type="hidden" name=action value="Logout">
 </form>
 </body>
 </html>
